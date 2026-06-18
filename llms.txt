@@ -1,0 +1,27 @@
+# Pixel Year
+
+> A free, open-source "Year in Pixels" grid calendar: one small box per day, the whole year
+> on one sheet. Used as a mood tracker, habit tracker, travel log, and holiday/leave planner.
+> Runs fully in the browser (single HTML file), no installation, no account.
+
+Key facts:
+- Layout: columns = months, rows = days 1–31; a coloured stroke marks the chosen weekday; the
+  stepped bottom edge follows each month's real day count. True to scale in millimetres (5×5 mm).
+- Output: single SVG, or a true-to-scale A4-landscape PDF with three calendars side by side,
+  generated in the browser (no print dialog, no extra software).
+- Holidays: public holidays and school holidays for 130+ countries (OpenHolidays + Nager.Date),
+  regions shown in the local language; plus user-defined custom date ranges.
+- Internationalisation: 6 UI languages (English, German, Spanish, French, Italian, Japanese);
+  localised month/day names via Intl; language, country and region are chosen independently
+  (e.g. a Hamburg calendar with Japanese labels).
+- Second overlay: compare two countries/regions in one calendar (cross-border life, holiday
+  planning); overlapping days are split diagonally.
+- Era year for Japan (令和), Taiwan (民國) and Thailand (พ.ศ.).
+- Customisable cell size, colours and line widths. License: GPL-3.0.
+
+Use cases: year in pixels, mood tracker, habit tracker, year planner, leave/vacation planner,
+travel log, printable wall or notebook calendar, tablet handwriting apps.
+
+Files:
+- pixel-year.html — the app (open in any browser).
+- README.md — documentation (also de/es/fr/it/ja).

@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Pixel Year — printable Year-in-Pixels grid calendar (mood & habit tracker, planner)</title>
+<meta name="description" content="Free printable Year-in-Pixels grid calendar: mood tracker, habit tracker and year planner. Public holidays & school holidays for 130+ countries, 6 languages, SVG & PDF, runs offline in the browser.">
+<meta name="keywords" content="year in pixels, pixel year, mood tracker, habit tracker, year planner, printable calendar, wall calendar, bullet journal, holidays, school holidays, SVG, PDF">
+<meta name="author" content="lordvonbaum">
+<link rel="canonical" href="https://github.com/TheInGoF/pixel-year">
+<!-- Open Graph / social sharing -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Pixel Year — printable Year-in-Pixels grid calendar">
+<meta property="og:description" content="Mood/habit tracker & year planner. Holidays + school holidays for 130+ countries, 6 languages, SVG & PDF. Runs offline.">
+<meta property="og:image" content="images/demo-overlay2.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Pixel Year — Year-in-Pixels grid calendar">
+<meta name="twitter:description" content="Mood/habit tracker & year planner. Holidays for 130+ countries, 6 languages, SVG & PDF.">
+<meta name="twitter:image" content="images/demo-overlay2.png">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebApplication","name":"Pixel Year","applicationCategory":"Calendar, Productivity","operatingSystem":"Any (web browser)","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"description":"Free printable Year-in-Pixels grid calendar: mood tracker, habit tracker and year planner. Public and school holidays for 130+ countries, six UI languages, SVG and PDF export, runs offline in the browser.","inLanguage":["en","de","es","fr","it","ja"],"license":"https://www.gnu.org/licenses/gpl-3.0.html"}
+</script>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect x='6' y='12' width='52' height='46' rx='7' fill='%23ffffff' stroke='%232b2f36' stroke-width='3'/><rect x='6' y='12' width='52' height='13' rx='7' fill='%23c30000'/><rect x='17' y='6' width='6' height='12' rx='3' fill='%232b2f36'/><rect x='41' y='6' width='6' height='12' rx='3' fill='%232b2f36'/><rect x='14' y='32' width='9' height='9' rx='2' fill='%233d8bd4'/><rect x='27' y='32' width='9' height='9' rx='2' fill='%23ffd23f'/><rect x='40' y='32' width='9' height='9' rx='2' fill='%232ea44f'/><rect x='14' y='45' width='9' height='9' rx='2' fill='%23ffd23f'/><rect x='27' y='45' width='9' height='9' rx='2' fill='%23c30000'/><rect x='40' y='45' width='9' height='9' rx='2' fill='%233d8bd4'/></svg>">
+<style>
+  :root { --accent: #c30000; }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, Segoe UI, Arial, sans-serif;
+    margin: 0; color: #222; background: #f4f5f7;
+  }
+  header { background: #fff; border-bottom: 1px solid #e2e4e8; padding: 16px 24px; }
+  header h1 { margin: 0; font-size: 20px; }
+  header p { margin: 4px 0 0; color: #666; font-size: 13px; }
+  .layout { display: flex; gap: 24px; padding: 24px; align-items: flex-start; flex-wrap: wrap; }
+  .controls {
+    background: #fff; border: 1px solid #e2e4e8; border-radius: 10px;
+    padding: 20px; width: 320px; flex: none;
+  }
+  .controls label { display: block; font-size: 13px; font-weight: 600; margin: 14px 0 4px; }
+  .controls label:first-child { margin-top: 0; }
+  .controls input[type=number], .controls select {
+    width: 100%; padding: 8px; border: 1px solid #cfd2d8; border-radius: 6px; font-size: 14px;
+  }
+  .controls textarea {
+    width: 100%; padding: 8px; border: 1px solid #cfd2d8; border-radius: 6px; font-size: 13px;
+    font-family: ui-monospace, Menlo, Consolas, monospace; resize: vertical; line-height: 1.4;
+  }
+  .row { display: flex; align-items: center; gap: 8px; margin-top: 12px; }
+  .row input[type=checkbox] { width: 16px; height: 16px; }
+  .row label { margin: 0; font-weight: 500; }
+  .hint { font-size: 12px; color: #888; margin-top: 4px; }
+  .buttons { margin-top: 20px; display: flex; flex-direction: column; gap: 10px; }
+  button {
+    padding: 10px 14px; border: none; border-radius: 6px; font-size: 14px; font-weight: 600;
+    cursor: pointer;
+  }
+  button.primary { background: var(--accent); color: #fff; }
+  button.secondary { background: #2b2f36; color: #fff; }
+  button:hover { opacity: .9; }
+  #status { font-size: 12px; color: #555; margin-top: 10px; min-height: 16px; }
+  .adv { margin-top: 16px; border-top: 1px solid #eee; padding-top: 12px; }
+  .adv summary { cursor: pointer; font-weight: 600; font-size: 13px; }
+  .adv-body { margin-top: 10px; }
+  .crow { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 8px 0; font-size: 13px; }
+  .crow input[type=color] { width: 46px; height: 28px; padding: 0; border: 1px solid #cfd2d8; border-radius: 6px; background: none; cursor: pointer; }
+  .crow input[type=number] { width: 78px; padding: 6px; border: 1px solid #cfd2d8; border-radius: 6px; font-size: 13px; }
+  .reset { margin-top: 8px; background: #eee; color: #333; font-size: 12px; padding: 6px 10px; }
+  .preview {
+    background: #fff; border: 1px solid #e2e4e8; border-radius: 10px; padding: 20px;
+    flex: 1; min-width: 280px; text-align: center;
+  }
+  .preview svg { max-width: 100%; height: auto; box-shadow: 0 1px 6px rgba(0,0,0,.12); }
+</style>
+</head>
+<body>
+<header>
+  <h1>Pixel Year</h1>
+  <p data-i18n="tagline">A year-at-a-glance grid calendar (“Year in Pixels”).</p>
+</header>
+
+<div class="layout">
+  <div class="controls">
+    <label data-i18n="language" for="uiLang">Language</label>
+    <select id="uiLang"></select>
+
+    <label data-i18n="year" for="year">Year</label>
+    <input type="number" id="year" value="2027" min="1900" max="2100">
+    <div class="hint" id="eraHint" style="display:none"></div>
+
+    <label data-i18n="country" for="country">Country (for holidays)</label>
+    <select id="country"></select>
+
+    <label data-i18n="region" for="region">Region</label>
+    <select id="region" disabled></select>
+
+    <div id="custom1box" style="display:none">
+      <label data-i18n="customHolidays" for="c1hol">Holidays — paste dates</label>
+      <textarea id="c1hol" rows="4"></textarea>
+      <label data-i18n="customSchool" for="c1sch">School holidays — paste dates</label>
+      <textarea id="c1sch" rows="4"></textarea>
+    </div>
+
+    <label data-i18n="markedWeekday" for="weekday">Marked weekday</label>
+    <select id="weekday">
+      <option value="0" data-i18n="mon">Monday</option>
+      <option value="1" data-i18n="tue">Tuesday</option>
+      <option value="2" data-i18n="wed">Wednesday</option>
+      <option value="3" data-i18n="thu">Thursday</option>
+      <option value="4" data-i18n="fri">Friday</option>
+      <option value="5" data-i18n="sat">Saturday</option>
+      <option value="6" selected data-i18n="sun">Sunday</option>
+    </select>
+
+    <label data-i18n="monthLabels" for="monthStyle">Month labels</label>
+    <select id="monthStyle">
+      <option value="letters" data-i18n="labelsLetters">Letters</option>
+      <option value="numbers" data-i18n="labelsNumbers">Numbers</option>
+    </select>
+
+    <div class="row" id="ferienRow">
+      <input type="checkbox" id="ferien">
+      <label data-i18n="schoolHolidays" for="ferien">School holidays</label>
+    </div>
+    <div class="hint" id="ferienHint" data-i18n="schoolHint">Needs internet and a country.</div>
+
+    <div class="row">
+      <input type="checkbox" id="triple">
+      <label data-i18n="tripleYears" for="triple">PDF: 3 consecutive years</label>
+    </div>
+    <div class="hint" data-i18n="tripleHint">Off: PDF shows the same year 3×.</div>
+
+    <div class="row">
+      <input type="checkbox" id="overlay2">
+      <label data-i18n="overlay2" for="overlay2">Second overlay</label>
+    </div>
+    <div id="ov2box" style="display:none; border-left:3px solid #c9e8c9; padding-left:10px; margin:4px 0 4px 2px">
+      <label data-i18n="country" for="country2">Country (for holidays)</label>
+      <select id="country2"></select>
+      <label data-i18n="region" for="region2">Region</label>
+      <select id="region2" disabled></select>
+      <div class="row" id="ferien2Row">
+        <input type="checkbox" id="ferien2">
+        <label data-i18n="schoolHolidays" for="ferien2">School holidays</label>
+      </div>
+      <div id="custom2box" style="display:none">
+        <label data-i18n="customHolidays" for="c2hol">Holidays — paste dates</label>
+        <textarea id="c2hol" rows="3"></textarea>
+        <label data-i18n="customSchool" for="c2sch">School holidays — paste dates</label>
+        <textarea id="c2sch" rows="3"></textarea>
+      </div>
+    </div>
+
+    <details class="adv">
+      <summary data-i18n="appearance">Adjust colours &amp; line widths</summary>
+      <div class="adv-body">
+        <div class="crow"><span data-i18n="cellSize">Cell size (mm)</span><input type="number" id="cell" value="5.0" step="0.5" min="1"></div>
+        <div class="crow"><span data-i18n="colSunday">Sunday stroke</span><input type="color" id="markColor" value="#c30000"></div>
+        <div class="crow"><span data-i18n="colHoliday">Public holidays (fill)</span><input type="color" id="holidayFill" value="#f4c9c9"></div>
+        <div class="crow"><span data-i18n="colSchool">School holidays (fill)</span><input type="color" id="schoolFill" value="#ffe9a8"></div>
+        <div class="crow"><span data-i18n="colHoliday2">Public holidays 2 (fill)</span><input type="color" id="holiday2Fill" value="#c9e8c9"></div>
+        <div class="crow"><span data-i18n="colSchool2">School holidays 2 (fill)</span><input type="color" id="school2Fill" value="#c9d9f4"></div>
+        <div class="crow"><span data-i18n="lwOuter">Frame / step contour (mm)</span><input type="number" id="swOuter" value="0.6" step="0.1" min="0"></div>
+        <div class="crow"><span data-i18n="lwThick">Header divider (mm)</span><input type="number" id="swThick" value="0.4" step="0.1" min="0"></div>
+        <div class="crow"><span data-i18n="lwThin">Grid lines (mm)</span><input type="number" id="swThin" value="0.1" step="0.05" min="0"></div>
+        <div class="crow"><span data-i18n="lwMark">Sunday stroke width (mm)</span><input type="number" id="markW" value="0.5" step="0.1" min="0"></div>
+        <button type="button" class="reset" id="resetStyle" data-i18n="reset">Reset to defaults</button>
+      </div>
+    </details>
+
+    <div class="buttons">
+      <button class="primary" id="btnSvg" data-i18n="downloadSvg">Download SVG</button>
+      <button class="secondary" id="btnPdf" data-i18n="downloadPdf">Download PDF (3× A4 landscape)</button>
+    </div>
+    <div id="status"></div>
+  </div>
+
+  <div class="preview">
+    <div id="preview"></div>
+  </div>
+</div>
+
+<script src="i18n.js"></script>
+<script src="countries.js"></script>
+<script>
+/* ===== Konstanten ===== */
+const MONTHS = ["J","F","M","A","M","J","J","A","S","O","N","D"];
+const N_ROWS = 31, N_COLS = 12;
+// Label/Kopf/Titel/Rand und Schrift werden aus der Kästchengröße abgeleitet (siehe buildSvg).
+
+// Standardwerte für Maße, Farben & Strichstärken (in der UI änderbar)
+const DEFAULT_STYLE = {
+  cell:    5.0,            // Kantenlänge Tageskästchen (mm) – skaliert alles mit
+  markColor:  "#c30000",   // Sonntagsstrich
+  holidayFill:"#f4c9c9",   // Feiertage (Füllung)
+  schoolFill: "#ffe9a8",   // Schulferien (Füllung)
+  swOuter: 0.6,            // Rahmen / fette Stufenkontur (mm)
+  swThick: 0.4,            // Kopf-Trennlinie (mm)
+  swThin:  0.1,            // Gitterlinien (mm)
+  markW:   0.5,            // Breite Sonntagsstrich (mm)
+  holiday2Fill: "#c9e8c9", // Overlay 2: Feiertage (blass-grün)
+  school2Fill:  "#c9d9f4", // Overlay 2: Schulferien (blass-blau)
+};
+
+const BUNDESLAENDER = {
+  bw: "Baden-Württemberg", by: "Bayern", be: "Berlin", bb: "Brandenburg",
+  hb: "Bremen", hh: "Hamburg", he: "Hessen", mv: "Mecklenburg-Vorpommern",
+  ni: "Niedersachsen", nw: "Nordrhein-Westfalen", rp: "Rheinland-Pfalz",
+  sl: "Saarland", sn: "Sachsen", st: "Sachsen-Anhalt",
+  sh: "Schleswig-Holstein", th: "Thüringen",
+};
+const ISO_SUBDIV = {
+  bw:"DE-BW", by:"DE-BY", be:"DE-BE", bb:"DE-BB", hb:"DE-HB", hh:"DE-HH",
+  he:"DE-HE", mv:"DE-MV", ni:"DE-NI", nw:"DE-NW", rp:"DE-RP", sl:"DE-SL",
+  sn:"DE-SN", st:"DE-ST", sh:"DE-SH", th:"DE-TH",
+};
+
+/* ===== Datums-Helfer ===== */
+const pad2 = n => String(n).padStart(2, "0");
+const key = (y, m, d) => `${y}-${pad2(m)}-${pad2(d)}`;     // m,d 1-indexiert
+function keyOfDate(dt) { return key(dt.getFullYear(), dt.getMonth()+1, dt.getDate()); }
+function addDays(dt, n) { const r = new Date(dt); r.setDate(r.getDate()+n); return r; }
+// Python weekday(): Mo=0 ... So=6   (JS getDay(): So=0 ... Sa=6)
+function pyWeekday(dt) { return (dt.getDay() + 6) % 7; }
+function daysInMonth(year, month) { return new Date(year, month, 0).getDate(); }
+
+function easterSunday(year) {
+  const a = year % 19;
+  const b = Math.floor(year / 100);
+  const c = year % 100;
+  const d = Math.floor(b / 4);
+  const e = b % 4;
+  const f = Math.floor((b + 8) / 25);
+  const g = Math.floor((b - f + 1) / 3);
+  const h = (19*a + b - d - g + 15) % 30;
+  const i = Math.floor(c / 4);
+  const k = c % 4;
+  const l = (32 + 2*e + 2*i - h - k) % 7;
+  const m = Math.floor((a + 11*h + 22*l) / 451);
+  const month = Math.floor((h + l - 7*m + 114) / 31);
+  const day = ((h + l - 7*m + 114) % 31) + 1;
+  return new Date(year, month - 1, day);
+}
+
+/* ===== Feiertage je Bundesland -> Set von "YYYY-MM-DD" ===== */
+function holidaysFor(year, land) {
+  if (!land) return new Set();
+  land = land.toLowerCase();
+  const es = easterSunday(year);
+  const karfr     = keyOfDate(addDays(es, -2));
+  const ostermo   = keyOfDate(addDays(es,  1));
+  const himmelf   = keyOfDate(addDays(es, 39));
+  const pfingstmo = keyOfDate(addDays(es, 50));
+  const fronleich = keyOfDate(addDays(es, 60));
+
+  const hs = new Set([
+    key(year, 1, 1),    // Neujahr
+    karfr, ostermo,
+    key(year, 5, 1),    // Tag der Arbeit
+    himmelf, pfingstmo,
+    key(year, 10, 3),   // Tag der Deutschen Einheit
+    key(year, 12, 25), key(year, 12, 26),
+  ]);
+
+  const hl3koenige     = key(year, 1, 6);
+  const intfrauentag   = key(year, 3, 8);
+  const weltkindertag  = key(year, 9, 20);
+  const reformationstag= key(year, 10, 31);
+  const allerheiligen  = key(year, 11, 1);
+  const mariaehimmelf  = key(year, 8, 15);
+
+  function busstag(y) {
+    let d = new Date(y, 10, 23);            // 23. November
+    while (pyWeekday(d) !== 2) d = addDays(d, -1);  // Mittwoch
+    return keyOfDate(d);
+  }
+
+  const extra = {
+    bw: [hl3koenige, fronleich, allerheiligen],
+    by: [hl3koenige, fronleich, allerheiligen, mariaehimmelf],
+    be: [intfrauentag],
+    bb: [reformationstag],
+    hb: [reformationstag],
+    hh: [reformationstag],
+    he: [fronleich],
+    mv: [intfrauentag, reformationstag],
+    ni: [reformationstag],
+    nw: [fronleich, allerheiligen],
+    rp: [fronleich, allerheiligen],
+    sl: [fronleich, mariaehimmelf, allerheiligen],
+    sn: [reformationstag, busstag(year)],
+    st: [hl3koenige, reformationstag],
+    sh: [reformationstag],
+    th: [weltkindertag, reformationstag],
+  };
+  (extra[land] || []).forEach(k => hs.add(k));
+  return hs;
+}
+
+/* ===== Schulferien via OpenHolidays-API (async) ===== */
+async function schoolHolidays(year, land) {
+  const out = new Set();
+  if (!land) return out;
+  const subdiv = ISO_SUBDIV[land.toLowerCase()];
+  if (!subdiv) return out;
+  const params = new URLSearchParams({
+    countryIsoCode: "DE", subdivisionCode: subdiv, languageIsoCode: "DE",
+    validFrom: `${year}-01-01`, validTo: `${year}-12-31`,
+  });
+  const url = "https://openholidaysapi.org/SchoolHolidays?" + params;
+  const resp = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!resp.ok) throw new Error("HTTP " + resp.status);
+  const data = await resp.json();
+  for (const item of data) {
+    let d = new Date(item.startDate + "T00:00:00");
+    const end = new Date(item.endDate + "T00:00:00");
+    while (d <= end) {
+      if (d.getFullYear() === year) out.add(keyOfDate(d));
+      d = addDays(d, 1);
+    }
+  }
+  return out;
+}
+
+/* ===== SVG-Aufbau (1:1 zum Python build_svg) ===== */
+function buildSvg(year, weekday, hols, ferien, style = {}) {
+  const { cell, markColor, holidayFill, schoolFill, swOuter, swThick, swThin, markW }
+    = { ...DEFAULT_STYLE, ...style };
+  // lokale Aliase mit den im Code verwendeten Namen (überschatten nichts Globales mehr)
+  const SW_OUTER = swOuter, SW_THICK = swThick, SW_THIN = swThin;
+  const MARK_COLOR = markColor, MARK_W = markW;
+  const HOLIDAY_FILL = holidayFill, SCHOOL_FILL = schoolFill;
+  // Maße aus der Kästchengröße ableiten (Basis 5 mm); Schrift skaliert proportional
+  const CELL_W = cell, CELL_H = cell, LABEL_W = 2*cell, HEADER_H = cell, TITLE_H = 2*cell, PAD = cell;
+  const factor = cell / 5.0;
+  const FS_YEAR = 9.0*factor, FS_MONTH = 3.3*factor, FS_DAY = 3.0*factor;
+  const months = (style.months && style.months.length === 12) ? style.months : MONTHS;
+  const f2 = n => n.toFixed(2);
+  const grid_w = LABEL_W + N_COLS * CELL_W;
+  const grid_h = HEADER_H + N_ROWS * CELL_H;
+  const W = grid_w + 2 * PAD;
+  const H = TITLE_H + grid_h + 2 * PAD;
+  const x0 = PAD, y0 = PAD + TITLE_H;
+  const gx0 = x0 + LABEL_W, gy0 = y0 + HEADER_H;
+
+  // Zweites Overlay (optional): eigene Feiertags-/Ferien-Sets + Farben
+  const HOLIDAY2 = style.holiday2Fill || DEFAULT_STYLE.holiday2Fill;
+  const SCHOOL2 = style.school2Fill || DEFAULT_STYLE.school2Fill;
+  const hols2 = style.hols2 || null, ferien2 = style.ferien2 || null;
+  const colorO1 = k => hols.has(k) ? HOLIDAY_FILL : (ferien.has(k) ? SCHOOL_FILL : null);
+  const colorO2 = k => (hols2 && hols2.has(k)) ? HOLIDAY2 : ((ferien2 && ferien2.has(k)) ? SCHOOL2 : null);
+
+  const s = [];
+  s.push(`<svg xmlns="http://www.w3.org/2000/svg" width="${W}mm" height="${H}mm" viewBox="0 0 ${W} ${H}" font-family="Arial, sans-serif">`);
+  s.push(`<rect width="${W}" height="${H}" fill="white"/>`);
+
+  // Overlay-Füllungen (unter dem Gitter): bei Doppelbelegung Zelle diagonal geteilt
+  for (let c = 0; c < N_COLS; c++) {
+    const month = c + 1;
+    for (let day = 1; day <= daysInMonth(year, month); day++) {
+      const k = key(year, month, day), c1 = colorO1(k), c2 = colorO2(k);
+      if (!c1 && !c2) continue;
+      const fx = gx0 + c * CELL_W, fy = gy0 + (day - 1) * CELL_H;
+      if (c1 && c2) {
+        s.push(`<polygon points="${f2(fx)},${f2(fy)} ${f2(fx + CELL_W)},${f2(fy)} ${f2(fx)},${f2(fy + CELL_H)}" fill="${c1}"/>`);
+        s.push(`<polygon points="${f2(fx + CELL_W)},${f2(fy)} ${f2(fx + CELL_W)},${f2(fy + CELL_H)} ${f2(fx)},${f2(fy + CELL_H)}" fill="${c2}"/>`);
+      } else {
+        s.push(`<rect x="${f2(fx)}" y="${f2(fy)}" width="${CELL_W}" height="${CELL_H}" fill="${c1 || c2}"/>`);
+      }
+    }
+  }
+
+  // Jahreszahl
+  const digits = String(year).split("");
+  const span = N_COLS * CELL_W, step = span / digits.length;
+  const ty = PAD + TITLE_H * 0.8;
+  digits.forEach((d, i) => {
+    const cx = gx0 + step * (i + 0.5);
+    s.push(`<text x="${f2(cx)}" y="${f2(ty)}" font-size="${FS_YEAR}" font-weight="bold" text-anchor="middle">${d}</text>`);
+  });
+  // Optionale zweite Jahreszählung (Ära) klein im oberen Rand, z. B. Japan 令和8
+  const eraStr = style.eraOf ? style.eraOf(year) : "";
+  if (eraStr) s.push(`<text x="${f2(gx0 + span / 2)}" y="${f2(PAD * 0.8)}" font-size="${FS_MONTH}" font-weight="bold" text-anchor="middle">${eraStr}</text>`);
+
+  // Monatskopf (Labels mit "\n" werden zweizeilig gestapelt, z. B. Japanisch "10" / "月")
+  for (let c = 0; c < N_COLS; c++) {
+    const cx = gx0 + c * CELL_W + CELL_W / 2;
+    if (months[c].includes("\n")) {
+      const [a, b] = months[c].split("\n");
+      const fs = FS_MONTH * 0.62;
+      s.push(`<text x="${f2(cx)}" y="${f2(y0 + HEADER_H * 0.46)}" font-size="${fs}" font-weight="bold" text-anchor="middle">${a}</text>`);
+      s.push(`<text x="${f2(cx)}" y="${f2(y0 + HEADER_H * 0.95)}" font-size="${fs}" font-weight="bold" text-anchor="middle">${b}</text>`);
+    } else {
+      s.push(`<text x="${f2(cx)}" y="${f2(y0 + HEADER_H * 0.72)}" font-size="${FS_MONTH}" font-weight="bold" text-anchor="middle">${months[c]}</text>`);
+    }
+  }
+  // Tageszahlen links
+  for (let r = 0; r < N_ROWS; r++) {
+    const cx = x0 + LABEL_W / 2, cy = gy0 + r * CELL_H + CELL_H * 0.72;
+    s.push(`<text x="${f2(cx)}" y="${f2(cy)}" font-size="${FS_DAY}" font-weight="bold" text-anchor="middle">${r+1}</text>`);
+  }
+
+  // Label/Kopf-Trenner
+  s.push(`<line x1="${gx0}" y1="${y0}" x2="${gx0}" y2="${gy0 + 31*CELL_H}" stroke="black" stroke-width="${SW_THIN}"/>`);
+  // innere vertikale Trenner
+  for (let c = 1; c < N_COLS; c++) {
+    const bottom = Math.max(daysInMonth(year, c), daysInMonth(year, c + 1));
+    const x = gx0 + c * CELL_W, yEnd = gy0 + bottom * CELL_H;
+    s.push(`<line x1="${x}" y1="${gy0}" x2="${x}" y2="${yEnd}" stroke="black" stroke-width="${SW_THIN}"/>`);
+  }
+  // horizontale Innenlinien (Stufen unten)
+  for (let r = 0; r < N_ROWS; r++) {
+    const day = r + 1, yb = gy0 + (r + 1) * CELL_H;
+    for (let c = 0; c < N_COLS; c++) {
+      if (day < daysInMonth(year, c + 1)) {
+        const xl = gx0 + c * CELL_W;
+        s.push(`<line x1="${xl}" y1="${yb}" x2="${xl + CELL_W}" y2="${yb}" stroke="black" stroke-width="${SW_THIN}"/>`);
+      }
+    }
+    if (day < N_ROWS)
+      s.push(`<line x1="${x0}" y1="${yb}" x2="${gx0}" y2="${yb}" stroke="black" stroke-width="${SW_THIN}"/>`);
+  }
+
+  // Kopf-Trennlinie
+  s.push(`<line x1="${x0}" y1="${gy0}" x2="${x0 + grid_w}" y2="${gy0}" stroke="black" stroke-width="${SW_THICK}"/>`);
+  // äußerer Rahmen
+  s.push(`<line x1="${x0}" y1="${y0}" x2="${x0 + grid_w}" y2="${y0}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+  s.push(`<line x1="${x0}" y1="${y0}" x2="${x0}" y2="${gy0 + 31*CELL_H}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+  s.push(`<line x1="${x0 + grid_w}" y1="${y0}" x2="${x0 + grid_w}" y2="${gy0 + 31*CELL_H}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+  s.push(`<line x1="${x0}" y1="${gy0 + 31*CELL_H}" x2="${gx0}" y2="${gy0 + 31*CELL_H}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+
+  // fette Stufenkontur unten
+  for (let c = 0; c < N_COLS; c++) {
+    const month = c + 1, dim = daysInMonth(year, month);
+    const xl = gx0 + c * CELL_W, xr = xl + CELL_W, yBottom = gy0 + dim * CELL_H;
+    s.push(`<line x1="${xl}" y1="${yBottom}" x2="${xr}" y2="${yBottom}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+    const ld = month > 1 ? daysInMonth(year, month - 1) : null;
+    if (ld !== null && ld !== dim) {
+      const ya = gy0 + Math.min(ld, dim) * CELL_H, yb = gy0 + Math.max(ld, dim) * CELL_H;
+      s.push(`<line x1="${xl}" y1="${ya}" x2="${xl}" y2="${yb}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+    }
+    const rd = month < 12 ? daysInMonth(year, month + 1) : null;
+    if (rd !== null && rd !== dim) {
+      const ya = gy0 + Math.min(rd, dim) * CELL_H, yb = gy0 + Math.max(rd, dim) * CELL_H;
+      s.push(`<line x1="${xr}" y1="${ya}" x2="${xr}" y2="${yb}" stroke="black" stroke-width="${SW_OUTER}"/>`);
+    }
+  }
+
+  // Sonntagsstriche (Farbe = MARK_COLOR); am Monatsende kein Strich (= Außenkontur)
+  for (let c = 0; c < N_COLS; c++) {
+    const month = c + 1;
+    const dim = daysInMonth(year, month);
+    for (let day = 1; day <= dim; day++) {
+      if (day < dim && pyWeekday(new Date(year, month - 1, day)) === weekday) {
+        const cx = gx0 + c * CELL_W + CELL_W / 2, cy = gy0 + day * CELL_H;
+        s.push(`<line x1="${f2(cx - CELL_W*0.34)}" y1="${f2(cy)}" x2="${f2(cx + CELL_W*0.34)}" y2="${f2(cy)}" stroke="${MARK_COLOR}" stroke-width="${MARK_W}" stroke-linecap="round"/>`);
+      }
+    }
+  }
+
+  s.push("</svg>");
+  return s.join("\n");
+}
+
+/* ===== Eingebauter Mini-PDF-Generator (ohne Bibliothek) =====
+   Zeichnet 3 Kalender maßstabsgetreu auf EINE A4-quer-Seite – analog zur Python build_pdf.
+   PDF nutzt Punkte (1 mm = 72/25.4 pt) und die Standard-Schrift Helvetica-Bold (keine Einbettung). */
+const PT = 72 / 25.4;
+const PAGE_W_MM = 297, PAGE_H_MM = 210;            // A4 quer
+
+// Zeichenbreiten Helvetica-Bold (/1000 em) für die verwendeten Zeichen – zum Zentrieren
+const HB_W = { J:611, F:611, M:833, A:722, S:667, O:778, N:722, D:722 };
+function glyphW(ch) { return /[0-9]/.test(ch) ? 556 : (HB_W[ch] ?? 556); }
+function textWidthPt(str, fsPt) {
+  let w = 0; for (const ch of String(str)) w += glyphW(ch);
+  return w / 1000 * fsPt;
+}
+function pdfRgb(hex) {
+  const h = hex.replace("#", "");
+  return [0, 2, 4].map(i => (parseInt(h.substr(i, 2), 16) / 255).toFixed(4)).join(" ");
+}
+const pdfEsc = s => String(s).replace(/[\\()]/g, m => "\\" + m);
+
+function buildPdf(years, weekday, holsMap, ferienMap, style = {}) {
+  const { cell, markColor, holidayFill, schoolFill, swOuter, swThick, swThin, markW }
+    = { ...DEFAULT_STYLE, ...style };
+  // Helvetica (PDF-Standardschrift) kann nur Latin. Nicht-lateinische Labels (1月, 令和8 …)
+  // werden als vom Browser gerenderte Bilder eingebettet; reiner Latin-Text bleibt Vektor.
+  const sanitize = s => String(s).replace(/[^\x20-\x7E]/g, "").replace(/\s+/g, "");
+  const rawMonths = (style.months && style.months.length === 12) ? style.months : MONTHS;
+  const images = style.images || {};
+  const CELL = cell, LABEL_W = 2 * cell, HEADER_H = cell, TITLE_H = 2 * cell;
+  const factor = cell / 5.0;
+  const FS_YEAR = 9.0 * factor, FS_MONTH = 3.3 * factor, FS_DAY = 3.0 * factor;
+
+  const cal_w = LABEL_W + N_COLS * CELL;            // Breite eines Kalenders (ohne Rand)
+  const cal_h = TITLE_H + HEADER_H + N_ROWS * CELL; // Höhe eines Kalenders
+  const n = Math.max(1, Math.min(years.length, 3));
+  years = years.slice(0, n);
+  const gap = (PAGE_W_MM - n * cal_w) / (n + 1);    // gleichmäßige Lücken = automatische Ränder
+  const topY = (PAGE_H_MM - cal_h) / 2;             // vertikal zentriert
+
+  // mm-von-oben -> PDF-Punkte (y zeigt nach oben)
+  const X = mm => (mm * PT).toFixed(2);
+  const Y = mm => ((PAGE_H_MM - mm) * PT).toFixed(2);
+
+  const ops = [];
+  const setStroke = rgb => ops.push(`${rgb} RG`);
+  const setFill = rgb => ops.push(`${rgb} rg`);
+  const line = (x1, y1, x2, y2, w, rgb = "0 0 0") => {
+    setStroke(rgb); ops.push(`${(w * PT).toFixed(3)} w`);
+    ops.push(`${X(x1)} ${Y(y1)} m ${X(x2)} ${Y(y2)} l S`);
+  };
+  const rectFill = (x, y, w, h, rgb) => {
+    setFill(rgb);
+    ops.push(`${X(x)} ${Y(y + h)} ${(w * PT).toFixed(2)} ${(h * PT).toFixed(2)} re f`);
+  };
+  const textC = (cx, baseY, fsMm, str) => {
+    const fsPt = fsMm * PT;
+    const xpt = (cx * PT) - textWidthPt(str, fsPt) / 2;
+    ops.push(`BT /F1 ${fsPt.toFixed(2)} Tf 0 0 0 rg ${xpt.toFixed(2)} ${Y(baseY)} Td (${pdfEsc(str)}) Tj ET`);
+  };
+
+  const markRgb = pdfRgb(markColor), holiRgb = pdfRgb(holidayFill), schoolRgb = pdfRgb(schoolFill);
+  // Zweites Overlay
+  const HOLI2 = pdfRgb(style.holiday2Fill || DEFAULT_STYLE.holiday2Fill);
+  const SCH2 = pdfRgb(style.school2Fill || DEFAULT_STYLE.school2Fill);
+  const hols2Map = style.hols2Map || {}, ferien2Map = style.ferien2Map || {};
+  const triFill = (x1, y1, x2, y2, x3, y3, rgb) => { setFill(rgb); ops.push(`${X(x1)} ${Y(y1)} m ${X(x2)} ${Y(y2)} l ${X(x3)} ${Y(y3)} l f`); };
+
+  // Eingebettete Bilder (für nicht-lateinische Labels), zentriert bei (cxMm, cyMm), Höhe boxHmm
+  const usedImg = [];
+  function placeImg(key, cxMm, cyMm, boxHmm) {
+    const im = images[key]; if (!im) return false;
+    let idx = usedImg.indexOf(key); if (idx < 0) { idx = usedImg.length; usedImg.push(key); }
+    const dispW = boxHmm * (im.w / im.h);
+    const xpt = cxMm * PT - (dispW * PT) / 2;
+    const ypt = (PAGE_H_MM - (cyMm + boxHmm / 2)) * PT;
+    ops.push(`q ${(dispW * PT).toFixed(2)} 0 0 ${(boxHmm * PT).toFixed(2)} ${xpt.toFixed(2)} ${ypt.toFixed(2)} cm /Im${idx} Do Q`);
+    return true;
+  }
+
+  function draw(ox, oy, year, hols, ferien, hols2, ferien2) {
+    const x0 = ox, gx0 = ox + LABEL_W;
+    const headTop = oy + TITLE_H, gy0 = headTop + HEADER_H;
+    const grid_w = LABEL_W + N_COLS * CELL;
+
+    // Overlay-Füllungen (unter dem Gitter): Ebene 1 + Ebene 2, bei Doppelbelegung diagonal
+    for (let c = 0; c < N_COLS; c++) {
+      const month = c + 1;
+      for (let day = 1; day <= daysInMonth(year, month); day++) {
+        const k = key(year, month, day);
+        const A = hols.has(k) ? holiRgb : (ferien.has(k) ? schoolRgb : null);
+        const B = hols2.has(k) ? HOLI2 : (ferien2.has(k) ? SCH2 : null);
+        if (!A && !B) continue;
+        const fx = gx0 + c * CELL, fy = gy0 + (day - 1) * CELL;
+        if (A && B) {
+          triFill(fx, fy, fx + CELL, fy, fx, fy + CELL, A);
+          triFill(fx + CELL, fy, fx + CELL, fy + CELL, fx, fy + CELL, B);
+        } else {
+          rectFill(fx, fy, CELL, CELL, A || B);
+        }
+      }
+    }
+
+    // Jahreszahl (Latin, Vektor)
+    const digits = String(year).split(""), step = (N_COLS * CELL) / digits.length;
+    const ty = oy + TITLE_H * 0.8;
+    digits.forEach((d, i) => textC(gx0 + step * (i + 0.5), ty, FS_YEAR, d));
+    // Optionale zweite Jahreszählung (Ära) klein darüber – als Bild, falls nicht-lateinisch
+    const eraStr = style.eraOf ? style.eraOf(year) : "";
+    if (eraStr) {
+      const ecx = gx0 + (N_COLS * CELL) / 2;
+      if (images[eraStr]) placeImg(eraStr, ecx, oy - TITLE_H * 0.14, FS_MONTH * 1.15);
+      else if (!/[^\x20-\x7E]/.test(eraStr)) textC(ecx, oy - TITLE_H * 0.02, FS_MONTH, eraStr);
+    }
+    // Monatskopf: nicht-lateinische Labels als Bild, sonst Vektor-Text
+    for (let c = 0; c < N_COLS; c++) {
+      const mcx = gx0 + c * CELL + CELL / 2, lbl = rawMonths[c];
+      if (images[lbl]) { placeImg(lbl, mcx, headTop + HEADER_H / 2, HEADER_H * 0.96); continue; }
+      textC(mcx, headTop + HEADER_H * 0.72, FS_MONTH, sanitize(lbl) || String(c + 1));
+    }
+    // Tageszahlen links
+    for (let r = 0; r < N_ROWS; r++)
+      textC(x0 + LABEL_W / 2, gy0 + r * CELL + CELL * 0.72, FS_DAY, r + 1);
+
+    // dünne Gitterlinien
+    line(gx0, headTop, gx0, gy0 + 31 * CELL, swThin);
+    for (let c = 1; c < N_COLS; c++) {
+      const bottom = Math.max(daysInMonth(year, c), daysInMonth(year, c + 1));
+      line(gx0 + c * CELL, gy0, gx0 + c * CELL, gy0 + bottom * CELL, swThin);
+    }
+    for (let r = 0; r < N_ROWS; r++) {
+      const day = r + 1, yb = gy0 + (r + 1) * CELL;
+      for (let c = 0; c < N_COLS; c++)
+        if (day < daysInMonth(year, c + 1)) line(gx0 + c * CELL, yb, gx0 + c * CELL + CELL, yb, swThin);
+      if (day < N_ROWS) line(x0, yb, gx0, yb, swThin);
+    }
+    // Kopf-Trennlinie + äußerer Rahmen
+    line(x0, gy0, x0 + grid_w, gy0, swThick);
+    line(x0, headTop, x0 + grid_w, headTop, swOuter);
+    line(x0, headTop, x0, gy0 + 31 * CELL, swOuter);
+    line(x0 + grid_w, headTop, x0 + grid_w, gy0 + 31 * CELL, swOuter);
+    line(x0, gy0 + 31 * CELL, gx0, gy0 + 31 * CELL, swOuter);
+    // fette Stufenkontur unten
+    for (let c = 0; c < N_COLS; c++) {
+      const month = c + 1, dim = daysInMonth(year, month);
+      const xl = gx0 + c * CELL, xr = xl + CELL, yBot = gy0 + dim * CELL;
+      line(xl, yBot, xr, yBot, swOuter);
+      const ld = month > 1 ? daysInMonth(year, month - 1) : null;
+      if (ld !== null && ld !== dim)
+        line(xl, gy0 + Math.min(ld, dim) * CELL, xl, gy0 + Math.max(ld, dim) * CELL, swOuter);
+      const rd = month < 12 ? daysInMonth(year, month + 1) : null;
+      if (rd !== null && rd !== dim)
+        line(xr, gy0 + Math.min(rd, dim) * CELL, xr, gy0 + Math.max(rd, dim) * CELL, swOuter);
+    }
+    // Sonntagsstriche (runde Enden), am Monatsende keiner
+    ops.push("1 J");
+    for (let c = 0; c < N_COLS; c++) {
+      const month = c + 1, dim = daysInMonth(year, month);
+      for (let day = 1; day < dim; day++) {
+        if (pyWeekday(new Date(year, month - 1, day)) === weekday) {
+          const cx = gx0 + c * CELL + CELL / 2, cy = gy0 + day * CELL;
+          line(cx - CELL * 0.34, cy, cx + CELL * 0.34, cy, markW, markRgb);
+        }
+      }
+    }
+    ops.push("0 J");
+  }
+
+  for (let k = 0; k < n; k++) {
+    const year = years[k];
+    draw(gap + k * (cal_w + gap), topY, year,
+      (holsMap && holsMap[year]) || new Set(), (ferienMap && ferienMap[year]) || new Set(),
+      hols2Map[year] || new Set(), ferien2Map[year] || new Set());
+  }
+
+  // ---- PDF-Datei aus den Zeichenoperationen zusammensetzen ----
+  const stream = ops.join("\n");
+  const imgObjs = usedImg.map(key => {
+    const im = images[key], bytes = atob(im.b64);
+    return `<< /Type /XObject /Subtype /Image /Width ${im.w} /Height ${im.h} `
+      + `/ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n${bytes}\nendstream`;
+  });
+  const xobj = usedImg.map((k, i) => `/Im${i} ${6 + i} 0 R`).join(" ");
+  const objs = [
+    "<< /Type /Catalog /Pages 2 0 R >>",
+    "<< /Type /Pages /Kids [3 0 R] /Count 1 >>",
+    `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${(PAGE_W_MM*PT).toFixed(2)} ${(PAGE_H_MM*PT).toFixed(2)}] `
+      + `/Resources << /Font << /F1 5 0 R >>${xobj ? ` /XObject << ${xobj} >>` : ""} >> /Contents 4 0 R >>`,
+    `<< /Length ${stream.length} >>\nstream\n${stream}\nendstream`,
+    "<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>",
+    ...imgObjs,
+  ];
+  let pdf = "%PDF-1.4\n";
+  const offsets = [];
+  objs.forEach((body, i) => { offsets.push(pdf.length); pdf += `${i + 1} 0 obj\n${body}\nendobj\n`; });
+  const xref = pdf.length;
+  pdf += `xref\n0 ${objs.length + 1}\n0000000000 65535 f \n`;
+  for (const off of offsets) pdf += `${String(off).padStart(10, "0")} 00000 n \n`;
+  pdf += `trailer\n<< /Size ${objs.length + 1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`;
+  return pdf;
+}
+
+/* ===== UI-Verdrahtung ===== */
+const $ = id => document.getElementById(id);
+const status = msg => { $("status").textContent = msg || ""; };
+
+// ---- Sprache / i18n ----
+const UI_LANGS = Object.keys(I18N);
+const LANG_NAMES = { en:"English", de:"Deutsch", es:"Español", fr:"Français", it:"Italiano", ja:"日本語", bg:"Български", hr:"Hrvatski", cs:"Čeština", da:"Dansk", nl:"Nederlands", et:"Eesti", fi:"Suomi", el:"Ελληνικά", hu:"Magyar", ga:"Gaeilge", lv:"Latviešu", lt:"Lietuvių", mt:"Malti", pl:"Polski", pt:"Português", ro:"Română", sk:"Slovenčina", sl:"Slovenščina", sv:"Svenska", lb:"Lëtzebuergesch", nb:"Norsk" };
+let LANG = (() => { const n = (navigator.language || "en").slice(0, 2).toLowerCase(); return UI_LANGS.includes(n) ? n : "en"; })();
+function fillLangSelect() {
+  const sel = $("uiLang");
+  Object.keys(I18N).map(c => [c, LANG_NAMES[c] || c]).sort((a, b) => a[1].localeCompare(b[1]))
+    .forEach(([c, name]) => { const o = document.createElement("option"); o.value = c; o.textContent = name; sel.appendChild(o); });
+}
+function t(key, vars) {
+  let s = (I18N[LANG] && I18N[LANG][key]) || I18N.en[key] || key;
+  if (vars) for (const k in vars) s = s.split(`{${k}}`).join(vars[k]);
+  return s;
+}
+function applyLang() {
+  document.documentElement.lang = LANG;
+  for (const el of document.querySelectorAll("[data-i18n]")) el.textContent = t(el.getAttribute("data-i18n"));
+  for (const id of ["c1hol", "c1sch", "c2hol", "c2sch"]) { const el = $(id); if (el) el.placeholder = t("customHint"); }
+}
+
+// ---- Monatslabels je Sprache (Buchstaben via Intl, Zahlen, JA zweizeilig) ----
+function monthsFor(lang, style) {
+  if (style === "numbers") return Array.from({ length: 12 }, (_, i) => String(i + 1));
+  if (lang === "ja") return Array.from({ length: 12 }, (_, i) => `${i + 1}\n月`);
+  const f = new Intl.DateTimeFormat(lang, { month: "narrow" });
+  return Array.from({ length: 12 }, (_, i) => f.format(new Date(2026, i, 1)));
+}
+
+// ---- Sprache -> wahrscheinliches Land (Vorbelegung, überschreibbar) ----
+const LANG_COUNTRY = { en:"IE", de:"DE", es:"ES", fr:"FR", it:"IT", ja:"JP", bg:"BG", hr:"HR", cs:"CZ", da:"DK", nl:"NL", et:"EE", fi:"FI", el:"GR", hu:"HU", ga:"IE", lv:"LV", lt:"LT", mt:"MT", pl:"PL", pt:"PT", ro:"RO", sk:"SK", sl:"SI", sv:"SE", lb:"LU", nb:"NO" };
+
+// Markierter Wochentag = letzter Tag der Woche im Land (Intl weekInfo). App: Mo=0 … So=6.
+function defaultWeekday(iso) {
+  try {
+    const loc = new Intl.Locale(`und-${iso}`);
+    const wi = (typeof loc.getWeekInfo === "function") ? loc.getWeekInfo() : loc.weekInfo;
+    const firstDay = (wi && wi.firstDay) || 1;   // 1=Mo … 7=So (DE=1 -> So letzter; US=7 -> Sa letzter)
+    const lastISO = ((firstDay + 5) % 7) + 1;    // letzter Wochentag (ISO 1..7)
+    return lastISO - 1;                          // -> Mo=0 … So=6
+  } catch { return 6; }
+}
+function applyCountryDefaults(iso) {
+  if (iso) $("weekday").value = String(defaultWeekday(iso));
+}
+
+// Länder mit zweiter Jahreszählung (gleiches Raster, andere Jahreszahl) -> Funktion year->Text
+const ERA = { JP: ["ja-JP", "japanese"], TW: ["zh-TW", "roc"], TH: ["th-TH", "buddhist"] };
+function eraOf(iso) {
+  const e = ERA[iso]; if (!e) return null;
+  return (year) => { try { return new Intl.DateTimeFormat(`${e[0]}-u-ca-${e[1]}`, { era: "short", year: "numeric" }).format(new Date(year, 5, 1)); } catch { return ""; } };
+}
+// UI-Hinweis (Ära des gewählten Landes), unabhängig von der UI-Sprache
+function updateEraHint() {
+  const el = $("eraHint"); if (!el) return;
+  const fn = eraOf($("country").value), y = parseInt($("year").value, 10);
+  if (fn && Number.isFinite(y)) { el.textContent = fn(y); el.style.display = ""; }
+  else el.style.display = "none";
+}
+
+// ---- Länder-Dropdown ----
+const COUNTRY_BY_ISO = Object.fromEntries(COUNTRIES.map(c => [c.iso, c]));
+function fillCountrySelect(sel) {
+  const custom = document.createElement("option");
+  custom.value = "__custom__"; custom.setAttribute("data-i18n", "customCountry"); custom.textContent = t("customCountry");
+  sel.appendChild(custom);
+  const none = document.createElement("option");
+  none.value = ""; none.setAttribute("data-i18n", "countryNone"); none.textContent = t("countryNone");
+  sel.appendChild(none);
+  for (const c of COUNTRIES) { const o = document.createElement("option"); o.value = c.iso; o.textContent = c.name; sel.appendChild(o); }
+}
+fillCountrySelect($("country"));
+fillCountrySelect($("country2"));
+
+// ---- Region (Subdivisions live von OpenHolidays, Namen in gewählter Sprache) ----
+const subCache = new Map();
+const ohLang = () => (LANG === "ja" ? "EN" : LANG.toUpperCase());   // OpenHolidays kennt kein JA
+async function loadRegions(iso, selId = "region") {
+  const sel = $(selId); sel.innerHTML = "";
+  const whole = document.createElement("option"); whole.value = ""; whole.textContent = t("regionWhole"); sel.appendChild(whole);
+  const c = COUNTRY_BY_ISO[iso];
+  if (!c || c.src !== "openholidays") { sel.disabled = true; return; }
+  sel.disabled = false;
+  const lng = ohLang(), ckey = `${iso}|${lng}`;
+  let subs = subCache.get(ckey);
+  if (!subs) {
+    try {
+      const r = await fetch(`https://openholidaysapi.org/Subdivisions?countryIsoCode=${iso}&languageIsoCode=${lng}`, { headers: { Accept: "application/json" } });
+      const data = r.ok ? await r.json() : [];
+      subs = []; const seen = new Set();
+      const pickName = s => {
+        const ns = s.name || [];
+        const n = ns.find(x => x.language === lng) || ns.find(x => x.language === "EN") || ns[0];
+        return n ? n.text : (s.shortName || s.code || s.isoCode);
+      };
+      const walk = items => { for (const s of items || []) { const code = s.code || s.isoCode; if (code && !seen.has(code)) { seen.add(code); subs.push({ code, name: pickName(s) }); } walk(s.children); } };
+      walk(data); subCache.set(ckey, subs);
+    } catch { subs = []; }
+  }
+  for (const s of subs) { const o = document.createElement("option"); o.value = s.code; o.textContent = s.name; sel.appendChild(o); }
+}
+
+// ---- Feiertage/Ferien: OpenHolidays (Katalog) + Nager.Date (Japan u. a.) ----
+function expandRange(set, start, end, year) {
+  let d = new Date(start + "T00:00:00"), e = new Date(end + "T00:00:00");
+  while (d <= e) { if (d.getFullYear() === year) set.add(keyOfDate(d)); d.setDate(d.getDate() + 1); }
+}
+
+// Eigene Eingabe: toleranter Parser. Akzeptiert pro Zeile Einzeldatum oder Bereich,
+// in den Formaten YYYY-MM-DD, YYYY/MM/DD, DD.MM.YYYY, DD/MM/YYYY. Umliegender Text wird ignoriert.
+const DATE_RE = /\d{4}[-/.]\d{1,2}[-/.]\d{1,2}|\d{1,2}[./]\d{1,2}[./]\d{4}/g;
+function toISO(s) {
+  let m = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})$/);      // YYYY-MM-DD / YYYY/MM/DD
+  if (m) return `${m[1]}-${pad2(+m[2])}-${pad2(+m[3])}`;
+  m = s.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})$/);            // DD.MM.YYYY / DD/MM/YYYY
+  if (m) return `${m[3]}-${pad2(+m[2])}-${pad2(+m[1])}`;
+  return null;
+}
+function parseCustomDates(text, year) {
+  const set = new Set();
+  if (!text) return set;
+  for (const line of text.split(/\n+/)) {
+    const tokens = line.match(DATE_RE);
+    if (!tokens) continue;
+    const dates = tokens.map(toISO).filter(Boolean);
+    if (!dates.length) continue;
+    const masked = line.replace(DATE_RE, "•");
+    const isRange = dates.length >= 2 && /•\s*(?:[-–—]|to|bis|au|al|–|～|〜|\.\.+)\s*•/i.test(masked);
+    if (isRange) {
+      let d = new Date(dates[0] + "T00:00:00"), end = new Date(dates[dates.length - 1] + "T00:00:00");
+      if (end < d) { const t = d; d = end; end = t; }
+      let guard = 0;
+      while (d <= end && guard++ < 1000) { if (d.getFullYear() === year) set.add(keyOfDate(d)); d.setDate(d.getDate() + 1); }
+    } else {
+      for (const iso of dates) if (new Date(iso + "T00:00:00").getFullYear() === year) set.add(iso);
+    }
+  }
+  return set;
+}
+const holCache = new Map();
+async function getPublic(iso, region, year) {
+  const c = COUNTRY_BY_ISO[iso]; if (!c) return new Set();
+  const ck = `pub|${iso}|${region || ""}|${year}`;
+  if (holCache.has(ck)) return holCache.get(ck);
+  let set = new Set();
+  if (c.src === "nager") {
+    const r = await fetch(`https://date.nager.at/api/v3/PublicHolidays/${year}/${iso}`);
+    if (r.ok) for (const h of await r.json()) if (h.date) set.add(h.date);
+  } else {
+    const p = new URLSearchParams({ countryIsoCode: iso, languageIsoCode: "EN", validFrom: `${year}-01-01`, validTo: `${year}-12-31` });
+    if (region) p.set("subdivisionCode", region);
+    const r = await fetch(`https://openholidaysapi.org/PublicHolidays?` + p, { headers: { Accept: "application/json" } });
+    if (r.ok) for (const e of await r.json()) expandRange(set, e.startDate, e.endDate, year);
+  }
+  holCache.set(ck, set); return set;
+}
+async function getSchool(iso, region, year) {
+  const c = COUNTRY_BY_ISO[iso]; if (!c || c.src !== "openholidays" || !c.school) return new Set();
+  const ck = `sch|${iso}|${region || ""}|${year}`;
+  if (holCache.has(ck)) return holCache.get(ck);
+  const set = new Set();
+  const p = new URLSearchParams({ countryIsoCode: iso, languageIsoCode: "EN", validFrom: `${year}-01-01`, validTo: `${year}-12-31` });
+  if (region) p.set("subdivisionCode", region);
+  const r = await fetch(`https://openholidaysapi.org/SchoolHolidays?` + p, { headers: { Accept: "application/json" } });
+  if (r.ok) for (const e of await r.json()) expandRange(set, e.startDate, e.endDate, year);
+  holCache.set(ck, set); return set;
+}
+
+const STYLE_FIELDS = ["cell", "markColor", "holidayFill", "schoolFill", "holiday2Fill", "school2Fill", "swOuter", "swThick", "swThin", "markW"];
+const NUM_FIELDS = ["cell", "swOuter", "swThick", "swThin", "markW"];
+function currentStyle() {
+  const st = {};
+  for (const id of STYLE_FIELDS) {
+    if (NUM_FIELDS.includes(id)) {
+      const v = parseFloat($(id).value);
+      const minOk = id === "cell" ? v > 0 : v >= 0;   // Kästchen > 0, Striche dürfen 0 sein
+      st[id] = Number.isFinite(v) && minOk ? v : DEFAULT_STYLE[id];
+    } else {
+      st[id] = $(id).value || DEFAULT_STYLE[id];
+    }
+  }
+  return st;
+}
+
+function currentSettings() {
+  return {
+    year: parseInt($("year").value, 10),
+    iso: $("country").value || null,
+    region: $("region").value || null,
+    weekday: parseInt($("weekday").value, 10),
+    ferien: $("ferien").checked,
+    triple: $("triple").checked,
+    monthStyle: $("monthStyle").value,
+    overlay2: $("overlay2").checked,
+    iso2: $("country2").value || null,
+    region2: $("region2").value || null,
+    ferien2: $("ferien2").checked,
+    cHol1: $("c1hol").value, cSch1: $("c1sch").value,
+    cHol2: $("c2hol").value, cSch2: $("c2sch").value,
+    style: currentStyle(),
+  };
+}
+
+// Warnt, wenn 3 Kalender bei dieser Kästchengröße nicht auf A4 quer passen.
+function a4Warning(cell) {
+  const calW = 14 * cell, calH = 34 * cell;
+  if (3 * calW > PAGE_W_MM || calH > PAGE_H_MM) {
+    const maxC = Math.floor(Math.min(PAGE_W_MM / (3 * 14), PAGE_H_MM / 34) * 10) / 10;
+    return t("a4Warn", { cell, max: maxC });
+  }
+  return "";
+}
+
+// Feiertage (rot) + optional Schulferien (gelb) für ein Jahr; leer wenn kein Land
+async function dataFor(year, s) {
+  if (s.iso === "__custom__") return { hols: parseCustomDates(s.cHol1, year), ferien: parseCustomDates(s.cSch1, year) };
+  if (!s.iso) return { hols: new Set(), ferien: new Set() };
+  const hols = await getPublic(s.iso, s.region, year);
+  const ferien = s.ferien ? await getSchool(s.iso, s.region, year) : new Set();
+  return { hols, ferien };
+}
+
+// Overlay 2 (optional): eigenes Land/Region
+async function dataFor2(year, s) {
+  if (!s.overlay2) return { hols2: null, ferien2: null };
+  if (s.iso2 === "__custom__") return { hols2: parseCustomDates(s.cHol2, year), ferien2: parseCustomDates(s.cSch2, year) };
+  if (!s.iso2) return { hols2: null, ferien2: null };
+  const hols2 = await getPublic(s.iso2, s.region2, year);
+  const ferien2 = s.ferien2 ? await getSchool(s.iso2, s.region2, year) : new Set();
+  return { hols2, ferien2 };
+}
+
+async function svgFor(year, s) {
+  const { hols, ferien } = await dataFor(year, s);
+  const { hols2, ferien2 } = await dataFor2(year, s);
+  return buildSvg(year, s.weekday, hols, ferien,
+    { ...s.style, months: monthsFor(LANG, s.monthStyle), eraOf: eraOf(s.iso), hols2, ferien2 });
+}
+
+function wrapRow(svgs) {
+  if (svgs.length === 1) return svgs[0];
+  return `<div style="display:flex;gap:6px;justify-content:center;align-items:flex-start">`
+    + svgs.map(x => `<div style="flex:1 1 0;min-width:0">${x}</div>`).join("") + `</div>`;
+}
+
+async function renderPreview() {
+  const s = currentSettings();
+  saveState();
+  updateEraHint();
+  if (!Number.isFinite(s.year)) { status(t("stInvalidYear")); return; }
+  const warn = a4Warning(s.style.cell);
+  const cname = s.iso ? (COUNTRY_BY_ISO[s.iso] ? COUNTRY_BY_ISO[s.iso].name : t("customCountry")) : null;
+  status(warn || (cname ? t("stHolidays", { name: cname }) : t("stNoHolidays")));
+  // Bei „3 aufeinanderfolgende Jahre" auch in der Vorschau 3 Kalender nebeneinander zeigen
+  const years = s.triple ? [s.year, s.year + 1, s.year + 2] : [s.year];
+  try {
+    const svgs = [];
+    for (const y of years) svgs.push(await svgFor(y, s));
+    $("preview").innerHTML = wrapRow(svgs);
+  } catch (e) {
+    status(t("stOffline", { err: e.message }));
+    const svgs = years.map(y => buildSvg(y, s.weekday, new Set(), new Set(), { ...s.style, months: monthsFor(LANG, s.monthStyle), eraOf: eraOf(s.iso) }));
+    $("preview").innerHTML = wrapRow(svgs);
+  }
+}
+
+function downloadFile(name, content, type) {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+}
+
+// Nicht-lateinisches Label (z. B. "1\n月", "令和8年") per Canvas zu JPEG rendern -> {b64,w,h}
+function rasterizeLabel(label) {
+  const lines = String(label).split("\n"), fontPx = 64, pad = 6, lineH = fontPx * 1.12;
+  const meas = document.createElement("canvas").getContext("2d");
+  meas.font = `bold ${fontPx}px sans-serif`;
+  const w = Math.ceil(Math.max(...lines.map(l => meas.measureText(l).width))) + pad * 2;
+  const h = Math.ceil(lineH * lines.length) + pad * 2;
+  const cv = document.createElement("canvas"); cv.width = w; cv.height = h;
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = "#000"; ctx.font = `bold ${fontPx}px sans-serif`;
+  ctx.textAlign = "center"; ctx.textBaseline = "top";
+  lines.forEach((l, i) => ctx.fillText(l, w / 2, pad + i * lineH));
+  return { b64: cv.toDataURL("image/jpeg", 0.95).split(",")[1], w, h };
+}
+// Alle nicht-lateinischen Labels (Monate + Ära je Jahr) vorab rastern
+function collectImages(years, s) {
+  const isCJK = x => /[^\x20-\x7E]/.test(x);
+  const need = new Set();
+  monthsFor(LANG, s.monthStyle).forEach(m => { if (isCJK(m)) need.add(m); });
+  const eraFn = eraOf(s.iso);
+  if (eraFn) years.forEach(y => { const e = eraFn(y); if (e && isCJK(e)) need.add(e); });
+  const images = {};
+  for (const lbl of need) images[lbl] = rasterizeLabel(lbl);
+  return images;
+}
+
+$("btnSvg").addEventListener("click", async () => {
+  const s = currentSettings();
+  if (!Number.isFinite(s.year)) { status(t("stInvalidYear")); return; }
+  const svg = await svgFor(s.year, s);
+  const suffix = s.iso === "__custom__" ? "_custom" : (s.iso ? `_${s.iso}` : "");
+  downloadFile(`pixel-year_${s.year}${suffix}.svg`, svg, "image/svg+xml");
+});
+
+$("btnPdf").addEventListener("click", async () => {
+  const s = currentSettings();
+  if (!Number.isFinite(s.year)) { status(t("stInvalidYear")); return; }
+  const years = s.triple ? [s.year, s.year + 1, s.year + 2] : [s.year, s.year, s.year];
+  status(t("stGenPdf"));
+  const holsMap = {}, ferienMap = {}, hols2Map = {}, ferien2Map = {};
+  try {
+    for (const y of new Set(years)) {
+      const d = await dataFor(y, s); holsMap[y] = d.hols; ferienMap[y] = d.ferien;
+      const d2 = await dataFor2(y, s);
+      if (d2.hols2) hols2Map[y] = d2.hols2;
+      if (d2.ferien2) ferien2Map[y] = d2.ferien2;
+    }
+  } catch (e) { status(t("stOffline", { err: e.message })); }
+  const images = collectImages(years, s);
+  const pdf = buildPdf(years, s.weekday, holsMap, ferienMap,
+    { ...s.style, months: monthsFor(LANG, s.monthStyle), eraOf: eraOf(s.iso), images, hols2Map, ferien2Map });
+  // PDF enthält binäre Bilddaten -> als Bytes (latin1) schreiben, nicht als UTF-8-String
+  const bytes = Uint8Array.from(pdf, c => c.charCodeAt(0) & 0xff);
+  const suffix = s.iso === "__custom__" ? "_custom" : (s.iso ? `_${s.iso}` : "");
+  const name = s.triple
+    ? `pixel-year_${years[0]}-${years[2]}${suffix}_A4.pdf`
+    : `pixel-year_${s.year}${suffix}_A4.pdf`;
+  downloadFile(name, bytes, "application/pdf");
+  const warn = a4Warning(s.style.cell);
+  status((warn ? warn + " " : "") + t("stPdfSaved", { name }));
+});
+
+// Reset: Stil-Felder auf Standard zurücksetzen
+$("resetStyle").addEventListener("click", () => {
+  for (const id of STYLE_FIELDS) $(id).value = DEFAULT_STYLE[id];
+  renderPreview();
+});
+
+// „Eigene"-Textfelder zeigen, Schulferien-Checkbox verbergen (Daten gibt man direkt ein)
+function updateCustomVisibility() {
+  const c1 = $("country").value === "__custom__";
+  const c2 = $("country2").value === "__custom__";
+  $("custom1box").style.display = c1 ? "" : "none";
+  $("custom2box").style.display = c2 ? "" : "none";
+  $("ferienRow").style.display = c1 ? "none" : "";
+  $("ferienHint").style.display = c1 ? "none" : "";
+  $("ferien2Row").style.display = c2 ? "none" : "";
+}
+
+// Sprachwechsel: Texte neu, passendes Land vorbelegen, Regionen in neuer Sprache laden
+$("uiLang").addEventListener("change", async () => {
+  LANG = $("uiLang").value;
+  applyLang();
+  const c = LANG_COUNTRY[LANG];
+  if (c && COUNTRY_BY_ISO[c]) { $("country").value = c; applyCountryDefaults(c); }
+  await loadRegions($("country").value);
+  await loadRegions($("country2").value, "region2");
+  updateCustomVisibility();
+  renderPreview();
+});
+
+// Landwechsel: länderüblichen Wochentrenntag setzen + Regionen nachladen
+$("country").addEventListener("change", async () => {
+  const iso = $("country").value;
+  if (iso && iso !== "__custom__") applyCountryDefaults(iso);
+  await loadRegions(iso);
+  updateCustomVisibility();
+  renderPreview();
+});
+
+// Overlay 2: ein-/ausblenden
+$("overlay2").addEventListener("change", () => {
+  $("ov2box").style.display = $("overlay2").checked ? "" : "none";
+  renderPreview();
+});
+// Land 2 wechseln: Regionen 2 nachladen
+$("country2").addEventListener("change", async () => {
+  await loadRegions($("country2").value, "region2");
+  updateCustomVisibility();
+  renderPreview();
+});
+
+// Live-Vorschau bei Änderungen
+["year", "region", "weekday", "ferien", "triple", "monthStyle", "region2", "ferien2",
+ "c1hol", "c1sch", "c2hol", "c2sch", ...STYLE_FIELDS].forEach(id => {
+  $(id).addEventListener("change", renderPreview);
+  $(id).addEventListener("input", renderPreview);
+});
+
+// ---- Auto-Speichern aller Auswahlen (localStorage, ohne Button) ----
+const PERSIST_IDS = ["uiLang", "year", "country", "region", "weekday", "monthStyle", "ferien",
+  "triple", "overlay2", "country2", "region2", "ferien2", "c1hol", "c1sch", "c2hol", "c2sch", ...STYLE_FIELDS];
+function saveState() {
+  const st = {};
+  for (const id of PERSIST_IDS) { const el = $(id); if (el) st[id] = (el.type === "checkbox") ? el.checked : el.value; }
+  try { localStorage.setItem("pixelYear", JSON.stringify(st)); } catch {}
+}
+function loadState() {
+  try { return JSON.parse(localStorage.getItem("pixelYear") || "null"); } catch { return null; }
+}
+
+// ---- Initialisierung (mit Wiederherstellung der letzten Auswahl) ----
+(async function init() {
+  const d = new Date(); d.setMonth(d.getMonth() + 1);   // Standardjahr = heute + 1 Monat
+  $("year").value = d.getFullYear();
+
+  fillLangSelect();
+  const saved = loadState();
+  if (saved && UI_LANGS.includes(saved.uiLang)) LANG = saved.uiLang;
+  $("uiLang").value = LANG;
+  applyLang();
+
+  if (saved) {   // gespeicherte Werte zurückspielen (Region erst nach dem Laden der Optionen)
+    for (const id of PERSIST_IDS) {
+      if (id === "region" || id === "region2" || id === "uiLang") continue;
+      const el = $(id); if (!el || !(id in saved)) continue;
+      if (el.type === "checkbox") el.checked = saved[id]; else el.value = saved[id];
+    }
+  }
+  $("ov2box").style.display = $("overlay2").checked ? "" : "none";
+  updateCustomVisibility();
+
+  await loadRegions($("country").value);
+  await loadRegions($("country2").value, "region2");
+  if (saved) {
+    if ("region" in saved) $("region").value = saved.region;
+    if ("region2" in saved) $("region2").value = saved.region2;
+  }
+  renderPreview();
+})();
+</script>
+</body>
+</html>
