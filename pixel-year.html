@@ -684,9 +684,10 @@ function buildMatrixSvg(year, weekday, hols, ferien, style = {}) {
   const factor = cell / 5.0, mc = cell;
   const HEAD = mc * 1, WD = mc * 1, WEEKS = 6;       // alles in 5-mm-Vielfachen (Raster global)
   const PAD = cell * 1, GAP = mc * 1.0;
+  const eraStr = showYear && style.eraOf ? style.eraOf(year) : "";
   const yearLeft = showYear && m43;                       // 4×3: Jahr links neben den Blöcken; 3×4: oben
   const TITLE_H = (showYear && !m43) ? 2 * cell : 0;
-  const LEFT_W = yearLeft ? 2 * cell : 0;
+  const LEFT_W = yearLeft ? (eraStr ? 3 : 2) * cell : 0;  // mit Ära breiter: Jahr + hochkant-Ära daneben
   const FS_YEAR = 9.0 * factor, FS_ERA = 3.3 * factor, FS_MON = 3.1 * factor, FS_WD = 2.2 * factor, FS_DAY = 2.5 * factor;
   const mw = 7 * mc, mh = HEAD + WD + WEEKS * mc;
   const gridW = cols * mw + (cols - 1) * GAP, gridH = rows * mh + (rows - 1) * GAP;
@@ -711,13 +712,17 @@ function buildMatrixSvg(year, weekday, hols, ferien, style = {}) {
   const line = (x1, y1, x2, y2, w) => s.push(`<line x1="${f2(x1)}" y1="${f2(y1)}" x2="${f2(x2)}" y2="${f2(y2)}" stroke="black" stroke-width="${w}"/>`);
 
   if (showYear) {
-    const digits = String(year).split(""), eraStr = style.eraOf ? style.eraOf(year) : "";
-    if (yearLeft) {                                        // gestapelt, vertikal zentriert in der linken Spalte
-      const cx = PAD + LEFT_W / 2, blockH = digits.length * FS_YEAR * 1.02;
-      const startY = y0 + (gridH - blockH) / 2 + FS_YEAR * 0.8;
-      digits.forEach((d, i) => s.push(`<text x="${f2(cx)}" y="${f2(startY + i * FS_YEAR * 1.02)}" font-size="${FS_YEAR}" font-weight="bold" text-anchor="middle">${d}</text>`));
-      if (eraStr) s.push(`<text x="${f2(cx)}" y="${f2(y0 + FS_ERA)}" font-size="${FS_ERA}" font-weight="bold" text-anchor="middle">${eraStr}</text>`);
-    } else {                                               // oben, über der Breite
+    const digits = String(year).split("");
+    if (yearLeft) {                                        // Jahr gestapelt; Ära hochkant (stehende Zeichen) daneben
+      const yh = digits.length * FS_YEAR * 1.02, yStart = y0 + (gridH - yh) / 2 + FS_YEAR * 0.8;
+      const cxYear = PAD + LEFT_W * (eraStr ? 0.62 : 0.5);
+      digits.forEach((d, i) => s.push(`<text x="${f2(cxYear)}" y="${f2(yStart + i * FS_YEAR * 1.02)}" font-size="${FS_YEAR}" font-weight="bold" text-anchor="middle">${d}</text>`));
+      if (eraStr) {
+        const ec = [...eraStr.replace(/\s+/g, "")], eh = ec.length * FS_ERA * 1.05;
+        const eStart = y0 + (gridH - eh) / 2 + FS_ERA * 0.8, cxEra = PAD + LEFT_W * 0.22;
+        ec.forEach((ch, i) => s.push(`<text x="${f2(cxEra)}" y="${f2(eStart + i * FS_ERA * 1.05)}" font-size="${FS_ERA}" font-weight="bold" text-anchor="middle">${ch}</text>`));
+      }
+    } else {                                               // 3×4: oben über der Breite
       const step = gridW / digits.length;
       digits.forEach((d, i) => s.push(`<text x="${f2(x0 + step * (i + 0.5))}" y="${f2(PAD + TITLE_H * 0.8)}" font-size="${FS_YEAR}" font-weight="bold" text-anchor="middle">${d}</text>`));
       if (eraStr) s.push(`<text x="${f2(x0 + gridW / 2)}" y="${f2(PAD * 0.7)}" font-size="${FS_ERA}" font-weight="bold" text-anchor="middle">${eraStr}</text>`);
@@ -785,7 +790,8 @@ function buildMatrixPdf(years, weekday, holsMap, ferienMap, style = {}) {
   // Block-Geometrie in Vielfachen der Mini-Tageszelle mc
   const HEADk = 1, WDk = 1, WEEKS = 6, GAPk = 1.0;        // alles in 5-mm-Vielfachen (Raster global)
   const yearLeft = showYear && m43;                       // 4×3: Jahr links; 3×4: oben
-  const TITLEk = (showYear && !m43) ? 2 : 0, LEFTk = yearLeft ? 2 : 0;
+  const hasEra = showYear && style.eraOf && style.eraOf(years[0]);
+  const TITLEk = (showYear && !m43) ? 2 : 0, LEFTk = yearLeft ? (hasEra ? 3 : 2) : 0;
   const mhk = HEADk + WDk + WEEKS;
   const blockWk = LEFTk + cols * 7 + (cols - 1) * GAPk;
   const blockHk = TITLEk + rows * mhk + (rows - 1) * GAPk;
@@ -827,10 +833,15 @@ function buildMatrixPdf(years, weekday, holsMap, ferienMap, style = {}) {
     const gridX = bx + LEFT_W, top = by + TITLE_H;
     if (showYear) {
       const digits = String(year).split(""), eraStr = style.eraOf ? style.eraOf(year) : "";
-      if (yearLeft) {   // gestapelt, vertikal zentriert in der linken Spalte
-        const cx = bx + LEFT_W / 2, stackH = digits.length * FS_YEAR * 1.02, startY = top + (gridHmm - stackH) / 2 + FS_YEAR * 0.8;
-        digits.forEach((d, i) => textC(cx, startY + i * FS_YEAR * 1.02, FS_YEAR, d));
-        if (eraStr) { if (images[eraStr]) placeImg(eraStr, cx, top + FS_ERA * 0.6, FS_ERA * 1.05); else if (!/[^\x20-\x7E]/.test(eraStr)) textC(cx, top + FS_ERA, FS_ERA, eraStr); }
+      if (yearLeft) {   // Jahr gestapelt; Ära hochkant (gestapelte Zeichen) daneben
+        const yh = digits.length * FS_YEAR * 1.02, startY = top + (gridHmm - yh) / 2 + FS_YEAR * 0.8;
+        const cxYear = bx + LEFT_W * (eraStr ? 0.62 : 0.5);
+        digits.forEach((d, i) => textC(cxYear, startY + i * FS_YEAR * 1.02, FS_YEAR, d));
+        if (eraStr) {
+          const ec = [...eraStr.replace(/\s+/g, "")], key = ec.join("\n"), cxEra = bx + LEFT_W * 0.22, boxH = ec.length * FS_ERA * 1.05;
+          if (images[key]) placeImg(key, cxEra, top + gridHmm / 2, boxH);
+          else if (!/[^\x20-\x7E]/.test(eraStr)) ec.forEach((ch, i) => textC(cxEra, top + (gridHmm - boxH) / 2 + FS_ERA * 0.8 + i * FS_ERA * 1.05, FS_ERA, ch));
+        }
       } else {          // oben über der Gitterbreite
         const step = innerW / digits.length;
         digits.forEach((d, i) => textC(gridX + step * (i + 0.5), by + TITLE_H * 0.8, FS_YEAR, d));
@@ -1541,7 +1552,8 @@ function collectImages(years, s) {
     monthsForSettings(s).forEach(m => { if (isCJK(m)) need.add(m); });
   }
   const eraFn = s.showYear !== false ? eraFor(s.iso) : null;
-  if (eraFn) years.forEach(y => { const e = eraFn(y); if (e && isCJK(e)) need.add(e); });
+  // 4×3-Matrix zeigt die Ära hochkant -> als gestapelte Zeichen (mit "\n") rastern
+  if (eraFn) years.forEach(y => { let e = eraFn(y); if (e && isCJK(e)) { if (s.orientation === "matrix43") e = [...e.replace(/\s+/g, "")].join("\n"); need.add(e); } });
   const images = {};
   for (const lbl of need) images[lbl] = rasterizeLabel(lbl);
   return images;
